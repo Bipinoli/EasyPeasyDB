@@ -3,44 +3,44 @@ use std::rc::Rc;
 use std::{borrow::BorrowMut, cell::RefCell};
 
 const BTREE_DEGREE: usize = 4;
-
-#[derive(Debug)]
-struct BTree {
-    root: Rc<RefCell<BNode>>,
-}
-
-impl BTree {
-    fn new() -> Self {
-        Self {
-            root: Rc::new(RefCell::new(BNode::new())),
-        }
-    }
-    fn insert(&mut self, key: i32) {
-        self.root.borrow_mut().get_mut().insert(key);
-        loop {
-            match &self.root.borrow().parent {
-                None => break,
-                Some(parent) => {
-                    self.root = Rc::clone(&parent);
-                }
-            }
-        }
-    }
-    fn display(&self) {
-        BTree::displ(self.root);
-    }
-    fn displ(node: Rc<RefCell<BNode>>) {
-        print!("key: ");
-        for k in node.borrow().key {
-            print!("{} ", k);
-        }
-        println!();
-        for child in node.borrow().children {
-            print!(">> ");
-            BTree::displ(Rc::new(RefCell::new(*child.clone())));
-        }
-    }
-}
+//
+// #[derive(Debug)]
+// struct BTree {
+//     root: Rc<RefCell<BNode>>,
+// }
+//
+// impl BTree {
+//     fn new() -> Self {
+//         Self {
+//             root: Rc::new(RefCell::new(BNode::new())),
+//         }
+//     }
+//     fn insert(&mut self, key: i32) {
+//         self.root.borrow_mut().get_mut().insert(key);
+//         loop {
+//             match &self.root.borrow().parent {
+//                 None => break,
+//                 Some(parent) => {
+//                     self.root = Rc::clone(&parent);
+//                 }
+//             }
+//         }
+//     }
+//     fn display(&self) {
+//         BTree::displ(self.root);
+//     }
+//     fn displ(node: Rc<RefCell<BNode>>) {
+//         print!("key: ");
+//         for k in node.borrow().key {
+//             print!("{} ", k);
+//         }
+//         println!();
+//         for child in node.borrow().children {
+//             print!(">> ");
+//             BTree::displ(Rc::new(RefCell::new(*child.clone())));
+//         }
+//     }
+// }
 
 #[derive(Debug, Clone)]
 struct BNode {
@@ -89,17 +89,14 @@ impl BNode {
             split.children.push(self.children.pop().unwrap());
             split.children.reverse();
         }
-
         let to_root = self.key.pop().unwrap();
-
-        match self.parent.take() {
-            Some(mut parent) => {
+        match self.parent.borrow_mut() {
+            Some(parent) => {
                 split.parent = Some(Rc::clone(&parent));
                 parent
                     .borrow_mut()
                     .get_mut()
                     .force_insert(to_root, Box::new(self.clone()), split);
-                self.parent = Some(parent);
             }
             None => {
                 let mut parent = Rc::new(RefCell::new(BNode::new()));
@@ -139,12 +136,12 @@ impl BNode {
 }
 
 fn main() {
-    let mut btree = BTree::new();
-    btree.insert(10);
-    btree.insert(20);
-    btree.insert(30);
-    btree.insert(40);
-    btree.insert(21);
-    btree.insert(25);
-    btree.display();
+    // let mut btree = BTree::new();
+    // btree.insert(10);
+    // btree.insert(20);
+    // btree.insert(30);
+    // btree.insert(40);
+    // btree.insert(21);
+    // btree.insert(25);
+    // btree.display();
 }
