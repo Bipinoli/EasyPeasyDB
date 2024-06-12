@@ -1,7 +1,7 @@
 # EasyPeasyDB
 
 ### Storage side
-- [ ] B-tree index
+- [X] B-tree index
 - [ ] B+ tree table
 - [ ] Pager
 
